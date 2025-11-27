@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Economic Calendar</title>
+
+    <style>
+        /* -------------------------- GLOBAL -------------------------- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: poppins, sans-serif;
+        }
+
+        body {
+            background: #ffffff;
+            color: #222;
+            overflow-x: hidden;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* -------------------------- HEADER -------------------------- */
+        header {
+            width: 100%;
+            background: #ffffff;
+            border-bottom: 1px solid #E6E6E6;
+            padding: 18px 48px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 999;
+        }
+
+        .logo img {
+            height: 38px;
+        }
+
+        nav {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+        }
+
+        nav a {
+            font-size: 15px;
+            color: #002B59;
+        }
+
+        .sign-btn {
+            background: #002B59;
+            padding: 10px 24px;
+            color: white;
+            border-radius: 8px;
+            border: none;
+        }
+
+        .hamburger {
+            display: none;
+            font-size: 28px;
+        }
+
+        /* -------------------------- CONTAINER -------------------------- */
+        .container {
+            width: 1200px;
+            max-width: 100%;
+            margin: auto;
+            padding: 32px 20px;
+        }
+
+        .breadcrumb {
+            color: #777;
+            font-size: 14px;
+        }
+
+        .heading {
+            margin-top: 45px;
+            font-size: 34px;
+            font-weight: 500;
+        }
+
+        .heading span {
+            color: #FA4D2E;
+        }
+
+        .sub {
+            margin-top: 6px;
+            color: #6F6F6F;
+        }
+
+        /* -------------------------- TABS -------------------------- */
+        .tabs {
+            margin-top: 28px;
+            padding: 14px;
+            background: #EAF2FF;
+            border-radius: 12px;
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+        }
+
+        .tabs button {
+            padding: 10px 24px;
+            background: white;
+            border: 1px solid #C9D6F4;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #002B59;
+            cursor: pointer;
+        }
+
+        .tabs .active {
+            background: #002B59;
+            color: white;
+        }
+
+        /* -------------------------- GRID -------------------------- */
+        .main-grid {
+            margin-top: 34px;
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 30px;
+        }
+
+        /* -------------------------- TABLE -------------------------- */
+        .date-title {
+            font-size: 20px;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th {
+            background: #F2F2F2;
+            padding: 14px;
+            text-align: left;
+            font-size: 14px;
+            color: #222;
+        }
+
+        td {
+            padding: 14px;
+            border-bottom: 1px solid #EDEDED;
+            font-size: 14px;
+        }
+
+        /* -------------------------- CALENDAR BOX -------------------------- */
+        .calendar-wrapper {
+            background: #ffffff;
+            padding: 24px;
+            border-radius: 18px;
+            box-shadow: 0px 3px 14px rgba(0, 0, 0, 0.07);
+        }
+
+        .cal-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
+        .arrow {
+            background: #EFEFEF;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        select {
+            padding: 8px 14px;
+            border-radius: 8px;
+            border: 1px solid #D5D5D5;
+        }
+
+        /* ===================== NEWSLETTER (UPDATED) ===================== */
+        .newsletter-section {
+            background: #FA4D2E;
+            padding: 55px 20px;
+            width: 100%;
+        }
+
+        .newsletter-wrapper {
+            max-width: 1200px;
+            margin: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            color: white;
+        }
+
+        /* LEFT SIDE */
+        .newsletter-left h2 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .newsletter-left p {
+            font-size: 16px;
+            opacity: 0.95;
+        }
+
+        /* RIGHT AREA */
+        .newsletter-right {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            /* <-- RIGHT ALIGN हटाया, LEFT कर दिया */
+        }
+
+        /* INPUT ROW */
+        .input-row {
+            display: flex;
+            gap: 12px;
+        }
+
+        .input-row input {
+            width: 340px;
+            /* <-- बड़े size में कर दिया */
+            padding: 14px 20px;
+            border-radius: 12px;
+            border: none;
+            font-size: 15px;
+            /* <-- text भी बड़ा कर दिया */
+        }
+
+        .input-row button {
+            padding: 14px 32px;
+            border-radius: 12px;
+            background: transparent;
+            border: 1px solid white;
+            color: white;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        /* CONSENT TEXT */
+        .consent-text {
+            margin-top: 10px;
+            font-size: 13px;
+            opacity: 0.9;
+            line-height: 1.4;
+            text-align: left;
+            /* <-- FIXED */
+            max-width: 420px;
+            /* <-- सुंदर line wrap */
+        }
+
+        /* ===================== RESPONSIVE ===================== */
+        @media (max-width: 900px) {
+            .newsletter-wrapper {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 20px;
+            }
+
+            .newsletter-right {
+                width: 100%;
+            }
+
+            .input-row {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .input-row input,
+            .input-row button {
+                width: 100%;
+            }
+
+            .consent-text {
+                text-align: left;
+                width: 100%;
+            }
+        }
+
+        /* ===================== RESPONSIVE ===================== */
+        @media (max-width: 900px) {
+            .newsletter-wrapper {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 20px;
+            }
+
+            .newsletter-right {
+                align-items: flex-start;
+                width: 100%;
+            }
+
+            .input-row {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .input-row input,
+            .input-row button {
+                width: 100%;
+            }
+
+            .consent-text {
+                text-align: left;
+            }
+        }
+
+
+        /* ===================== DISCLAIMER ===================== */
+        .disclaimer-box {
+            padding: 28px 20px;
+            max-width: 1200px;
+            margin: auto;
+            text-align: center;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .divider-line {
+            max-width: 1200px;
+            margin: auto;
+            opacity: 0.4;
+        }
+
+        /* ===================== MAIN FOOTER ===================== */
+        .main-footer {
+            padding: 40px 20px;
+            background: #ffffff;
+        }
+
+        .footer-grid {
+            max-width: 1200px;
+            margin: auto;
+            display: grid;
+            grid-template-columns: 1.3fr 1fr 1fr 1fr;
+            gap: 30px;
+        }
+
+        .footer-col h3 {
+            font-size: 20px;
+            margin-bottom: 18px;
+        }
+
+        .footer-col h4 {
+            font-size: 18px;
+            margin-bottom: 16px;
+        }
+
+        .footer-col a {
+            display: block;
+            margin-bottom: 10px;
+            color: #444;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .social-row {
+            /* display: flex; */
+            gap: 20px;
+            /* align-items: center; */
+            margin-bottom: 14px;
+            align-items: start;
+            display: flex;
+            top: 52px;
+
+
+        }
+
+        .social-row img {
+            width: 26px;
+            margin: 0%;
+            /* margin-right: 10px; */
+            /* text-align: start; */
+            align-items: start;
+            border-radius: 50%;
+        }
+
+        .address {
+            margin-top: 14px;
+            font-size: 14px;
+            color: #444;
+            text-align: start;
+        }
+
+        /* ===================== BOTTOM COPYRIGHT ===================== */
+        .footer-bottom {
+            border-top: 1px solid #eee;
+            padding: 18px 20px;
+            display: flex;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: auto;
+            font-size: 14px;
+        }
+
+        .footer-links a {
+            margin-left: 22px;
+            color: #444;
+        }
+
+        /* ===================== MOBILE RESPONSIVE ===================== */
+        @media (max-width: 900px) {
+
+            .newsletter-input-row {
+                flex-direction: column;
+            }
+
+            .newsletter-input-row button {
+                width: 100%;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+                text-align: left;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                text-align: center;
+                gap: 12px;
+            }
+
+            .footer-links a {
+                margin: 0 10px;
+            }
+        }
+
+        .calendar {
+            margin-top: 18px;
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+        }
+
+        .calendar div {
+            padding: 12px 0;
+            background: #F5F5F5;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .day-name {
+            background: transparent !important;
+            font-weight: bold;
+        }
+
+        /* -------------------------- FOOTER (ORANGE) -------------------------- */
+        .newsletter {
+            width: 100%;
+            background: #FA4D2E;
+            margin-top: 40px;
+            padding: 38px 20px;
+            color: white;
+            text-align: center;
+            border-radius: 0;
+        }
+
+        .newsletter input {
+            width: 300px;
+            padding: 14px;
+            margin-top: 16px;
+            border-radius: 8px;
+            border: none;
+        }
+
+        .newsletter button {
+            padding: 14px 26px;
+            background: #002B59;
+            border: none;
+            color: white;
+            border-radius: 8px;
+            margin-left: 8px;
+        }
+
+        /* -------------------------- COPYRIGHT FOOTER -------------------------- */
+        footer {
+            background: #002B59;
+            margin-top: 0;
+            padding: 40px 20px;
+            color: white;
+            text-align: center;
+        }
+
+        /* -------------------------- MOBILE RESPONSIVE -------------------------- */
+        @media (max-width: 900px) {
+
+            nav,
+            .sign-btn {
+                display: none;
+            }
+
+            .hamburger {
+                display: block;
+            }
+
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .calendar-wrapper {
+                margin-top: 20px;
+            }
+
+            .newsletter input {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+
+            .newsletter button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ====================== HEADER ====================== -->
+    <header>
+        <div class="logo">
+            <h3 style="color: #FA4D2E;">MeraDhan</h3>
+        </div>
+
+        <nav>
+            <a href="#">How it Works</a>
+            <a href="#">Products</a>
+            <a href="#">Tools</a>
+            <a href="#">Resources</a>
+            <a href="#">Login</a>
+        </nav>
+
+        <button class="sign-btn">Sign Up</button>
+        <div class="hamburger">☰</div>
+    </header>
+
+    <!-- ====================== BODY ====================== -->
+    <div class="container">
+
+        <p class="breadcrumb"><span style="color:rgba(12, 69, 128)">Home </span>/
+            <span style="color:rgba(12, 69, 128)">Resources </span>/ <b>Economic
+                Calendar</b>
+        </p>
+
+        <h1 class="heading">Economic <span>Calendar</span></h1>
+        <p class="sub">Stay updated with key global economic events, interest rate decisions, and bond auctions.</p>
+
+        <!-- TABS -->
+        <div class="tabs">
+            <button>Yesterday</button>
+            <button class="active">Today</button>
+            <button>Tomorrow</button>
+            <button>This Week</button>
+            <button>Next Week</button>
+            <button>This Month</button>
+        </div>
+
+        <!-- GRID -->
+        <div class="main-grid">
+
+            <!-- LEFT -->
+            <div class="table-side">
+                <p class="date-title">28 March 2025</p>
+
+                <table>
+                    <tr>
+                        <th>Time</th>
+                        <th>Country</th>
+                        <th>Event</th>
+                    </tr>
+
+                    <tr>
+                        <td>12:00</td>
+                        <td>🇯🇵 JPN</td>
+                        <td>BoJ Monetary Policy Meeting Minutes</td>
+                    </tr>
+
+                    <tr>
+                        <td>12:00</td>
+                        <td>🇯🇵 JPN</td>
+                        <td>BoJ Monetary Policy Meeting Minutes</td>
+                    </tr>
+
+                    <tr>
+                        <td>12:00</td>
+                        <td>🇯🇵 JPN</td>
+                        <td>BoJ Monetary Policy Meeting Minutes</td>
+                    </tr>
+
+                </table>
+            </div>
+
+            <!-- RIGHT CALENDAR -->
+            <div class="calendar-wrapper">
+                <div class="cal-head">
+                    <div class="arrow">‹</div>
+
+                    <select>
+                        <option>January</option>
+                        <option>February</option>
+                        <option>March</option>
+                        <option selected>April</option>
+                    </select>
+
+                    <select>
+                        <option>2023</option>
+                        <option>2024</option>
+                        <option selected>2025</option>
+                    </select>
+
+                    <div class="arrow">›</div>
+                </div>
+
+                <div class="calendar">
+                    <div class="day-name">Mo</div>
+                    <div class="day-name">Tu</div>
+                    <div class="day-name">We</div>
+                    <div class="day-name">Th</div>
+                    <div class="day-name">Fr</div>
+                    <div class="day-name">Sa</div>
+                    <div class="day-name">Su</div>
+
+                    <div>31</div>
+                    <div>1</div>
+                    <div>2</div>
+                    <div>3</div>
+                    <div>4</div>
+                    <div>5</div>
+                    <div>6</div>
+
+                    <div>7</div>
+                    <div>8</div>
+                    <div>9</div>
+                    <div>10</div>
+                    <div>11</div>
+                    <div>12</div>
+                    <div>13</div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="newsletter-section">
+
+        <div class="newsletter-wrapper">
+
+            <!-- LEFT TEXT -->
+            <div class="newsletter-left">
+                <h2>Stay up-to-date with market updates!</h2>
+                <p>Subscribe to our newsletter!</p>
+            </div>
+
+            <!-- RIGHT INPUT -->
+            <div class="newsletter-right">
+                <div class="input-row">
+                    <input type="text" placeholder="Your Email ID">
+                    <button>Subscribe</button>
+                </div>
+
+                <p class="consent-text">
+                    By clicking on “Subscribe” button, I agree to MeraDhan’s Privacy Policy
+                    and Terms of Use.
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ================== DISCLAIMER ================== -->
+    <div class="disclaimer-box">
+        Disclaimer : Investments in debt securities/ municipal debt securities/ securitised debt instruments are subject
+        to risks
+        including delay and/ or default in payment. Read all the offer related documents carefully.
+    </div>
+
+    <hr class="divider-line">
+
+    <!-- ================== MAIN FOOTER ================== -->
+    <footer class="main-footer">
+
+        <div class="footer-grid">
+
+            <!-- Column 1: MeraDhan -->
+            <div class="footer-col">
+                <h3 style="color: #000000b3; text-align: start;">MeraDhan</h3>
+
+                <div class="social-row">
+                    <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png "
+                        style="width: 24px; height: 24px; ">
+                    <img src="https://cdn-icons-png.flaticon.com/512/3670/3670147.png">
+                    <img src="./twitter.svg" alt="Twitter" style="width: 24px; height: 24px;" />
+
+
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/8/81/LinkedIn_icon.svg" alt="LinkedIn"
+                        style="width: 24px; height: 24px;" />
+
+                    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png"
+                        style="width: 24px; height: 24px;">
+                </div>
+
+                <p class="address">
+                    <span style="margin: 5px;">📍</span> D 2703, Ashok Tower, Dr SSR Road, Parel (East)<br>
+                    Mumbai - 400012, Maharashtra
+                </p>
+
+                <p class="address">
+                    <span style="margin: 5px;">✉️</span> contact@meradhan.co
+                </p>
+            </div>
+
+            <!-- Column 2: Products -->
+            <div class="footer-col">
+
+                <h4 style="color: #000000b3;">Products</h4>
+                <a>Bonds</a>
+                <a>Fixed Deposits</a>
+                <a>DhanGPT</a>
+                <a>Return Calculator</a>
+            </div>
+
+            <!-- Column 3: Company -->
+            <div class="footer-col">
+                <h4 style="color: #000000b3;">Company</h4>
+                <a>About Us</a>
+                <a>Contact Us</a>
+                <a>Career</a>
+                <a>Media Kit</a>
+                <a>Press</a>
+                <a>News</a>
+            </div>
+
+            <!-- Column 4: Resources -->
+            <div class="footer-col">
+                <h4 style="color: #000000b3;">Resources</h4>
+                <a>Blog</a>
+                <a>Tutorials</a>
+                <a>Newsletter</a>
+                <a>Events</a>
+                <a>Help Center</a>
+                <a>Support</a>
+            </div>
+
+        </div>
+
+    </footer>
+
+    <!-- ================== BOTTOM COPYRIGHT BAR ================== -->
+    <div class="footer-bottom">
+        <p>© 2024 MeraDhan. All Rights Reserved.</p>
+
+        <div class="footer-links">
+            <a>Terms of Use</a>
+            <a>Privacy Policy</a>
+            <a>Cookie Policy</a>
+        </div>
+    </div>
+
+
+</body>
+
+</html>
